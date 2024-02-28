@@ -1,19 +1,35 @@
-import styled from "styled-components";
-
+import styled, { css } from "styled-components";
+import {
+	typography,
+	TypographyProps,
+	layout,
+	LayoutProps,
+} from "styled-system";
 interface StyledLabelProps {
 	$invalid?: boolean;
+}
+
+interface StyledButtonProps extends TypographyProps, LayoutProps {
+	$outline?: boolean;
 }
 
 export const StyledLabel = styled.label<StyledLabelProps>`
 	display: block;
 	margin-bottom: 5px;
-	font-weight: bold;
+	font-weight: 500;
 	color: ${(props) => (props.$invalid ? "red" : "black")};
 `;
 
 export const StyledInput = styled.input<StyledLabelProps>`
 	width: 100%;
-	padding: 10px;
+	padding: 6px;
+	border: ${(props) => (props.$invalid ? "2px solid red" : "1px solid #ccc")};
+	border-radius: 5px;
+`;
+
+export const StyledTextArea = styled.textarea<StyledLabelProps>`
+	width: 100%;
+	padding: 6px;
 	border: ${(props) => (props.$invalid ? "2px solid red" : "1px solid #ccc")};
 	border-radius: 5px;
 `;
@@ -26,7 +42,9 @@ export const StyledErrorMessage = styled.span`
 	color: red;
 `;
 
-export const StyledButton = styled.button`
+export const StyledButton = styled.button<StyledButtonProps>`
+	${typography}
+	${layout}
 	align-items: center;
 	background-clip: padding-box;
 	background-color: #201658;
@@ -68,4 +86,26 @@ export const StyledButton = styled.button`
 		box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
 		transform: translateY(0);
 	}
+	${(props) =>
+		props.$outline &&
+		css`
+			background: white;
+			color: #201658;
+			border: 2px solid #201658;
+			&:hover,
+			&:focus {
+				background-color: #98abee;
+				box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+			}
+			&:hover {
+				transform: translateY(-1px);
+			}
+
+			&:active {
+				color: white;
+				background-color: #1d24ca;
+				box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+				transform: translateY(0);
+			}
+		`}
 `;

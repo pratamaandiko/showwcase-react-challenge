@@ -23,7 +23,6 @@ const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
 	}
 
 	const submitEducationHandler = (data: EducationType) => {
-		console.log(data);
 		setEducationsData((prevState) => [...prevState, data]);
 	};
 
@@ -41,7 +40,11 @@ const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
 			{educationsData.length ? (
 				<div className="grid grid-cols-3 w-full gap-4">
 					<aside className="col-span-3 md:col-span-1 flex flex-col space-y-2 ">
-						<StyledH2 fontSize={["20px", "24px"]} fontWeight={700}>
+						<StyledH2
+							fontSize={["20px", "24px"]}
+							fontWeight={700}
+							className="border-b-2 border-b-gray-300 pb-4"
+						>
 							Bookmark
 						</StyledH2>
 						{educationsData.map((item) => (
@@ -71,8 +74,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
 				<StyledH2
 					fontSize={["20px", "24px"]}
 					fontWeight={700}
-					textAlign={"center"}
-					className="p-4"
+					className="p-4 text-center"
 				>
 					You have no education data!
 				</StyledH2>
