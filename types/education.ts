@@ -3,8 +3,8 @@ export type EducationType = {
 	school: string;
 	degree: string;
 	field: string;
-	startYear: number;
-	endYear: number;
+	startDate: Date;
+	endDate: Date;
 	grade: number;
 	description: string;
 };
@@ -14,8 +14,8 @@ export type EducationSubmitType = {
 	school: { label: string; value: string } | null;
 	degree: { label: string; value: string } | null;
 	field: { label: string; value: string } | null;
-	startYear: number;
-	endYear: number;
+	startDate: Date;
+	endDate: Date;
 	grade: number;
 	description: string;
 };

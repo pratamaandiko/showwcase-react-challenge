@@ -74,13 +74,15 @@ const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
 						>
 							Educations
 						</StyledH2>
-						{educationsData.map((item) => (
-							<EducationCard
-								key={item.id}
-								data={item}
-								onClickEdit={setIsOpenEditModal}
-							/>
-						))}
+						{educationsData
+							.sort((a, b) => b.endDate.getTime() - a.endDate.getTime())
+							.map((item) => (
+								<EducationCard
+									key={item.id}
+									data={item}
+									onClickEdit={setIsOpenEditModal}
+								/>
+							))}
 					</main>
 				</div>
 			) : (

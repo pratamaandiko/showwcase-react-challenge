@@ -21,3 +21,9 @@
 		text-wrap: balance;
 	}
 }
+.react-datepicker__input-container input {
+	width: 100%;
+	padding: 6px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}

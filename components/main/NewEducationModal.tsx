@@ -11,11 +11,14 @@ import {
 	StyledLabel,
 	StyledTextArea,
 } from "../styled/Form";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import styled from "styled-components";
 import Select from "react-select";
 import { courseList, degreeOptions } from "@/constant/data";
 import { useGetUniversity } from "@/hooks/api/useGetUniversity";
 import useDebounce from "@/hooks/useDebounce";
+import { formatDate } from "@/helpers/functions";
 
 interface NewEducationModalProps {
 	isOpen: boolean;
@@ -83,6 +86,7 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 		});
 		onRequestClose();
 	};
+
 	return (
 		<>
 			<style>
@@ -151,105 +155,129 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 						{errors.school && (
 							<StyledErrorMessage>{errors.school.message}</StyledErrorMessage>
 						)}
-					</div>
-
-					<div className="flex flex-col w-full space-y-1">
-						<StyledLabel>
-							Degree<span className="text-red-500">*</span>
-						</StyledLabel>
-						<Controller
-							control={control}
-							name="degree"
-							defaultValue={null}
-							rules={{ required: "Input your degree!" }}
-							render={({ field: { onChange, value } }) => (
-								<Select
-									className="basic-single"
-									classNamePrefix="select"
-									defaultValue={null}
-									isClearable
-									isSearchable
-									options={degreeOptions.map((item) => ({
-										label: item,
-										value: item,
-									}))}
-									onChange={onChange}
-									value={value}
-								/>
+					</div>{" "}
+					<div className="flex justify-between gap-3">
+						<div className="flex flex-col w-1/2 space-y-1">
+							<StyledLabel>
+								Degree<span className="text-red-500">*</span>
+							</StyledLabel>
+							<Controller
+								control={control}
+								name="degree"
+								defaultValue={null}
+								rules={{ required: "Input your degree!" }}
+								render={({ field: { onChange, value } }) => (
+									<Select
+										className="basic-single"
+										classNamePrefix="select"
+										defaultValue={null}
+										isClearable
+										isSearchable
+										options={degreeOptions.map((item) => ({
+											label: item,
+											value: item,
+										}))}
+										onChange={onChange}
+										value={value}
+									/>
+								)}
+							/>
+							{errors.degree && (
+								<StyledErrorMessage>{errors.degree.message}</StyledErrorMessage>
 							)}
-						/>
-						{errors.degree && (
-							<StyledErrorMessage>{errors.degree.message}</StyledErrorMessage>
-						)}
-					</div>
+						</div>
 
-					<div className="flex flex-col w-full space-y-1">
-						<StyledLabel>
-							Field of study<span className="text-red-500">*</span>
-						</StyledLabel>
-						<Controller
-							control={control}
-							name="field"
-							defaultValue={null}
-							rules={{ required: "Input your field!" }}
-							render={({ field: { onChange, value } }) => (
-								<Select
-									className="basic-single"
-									classNamePrefix="select"
-									defaultValue={null}
-									isClearable
-									isSearchable
-									options={courseList.map((item) => ({
-										label: item,
-										value: item,
-									}))}
-									onChange={onChange}
-									value={value}
-								/>
+						<div className="flex flex-col w-1/2 space-y-1">
+							<StyledLabel>
+								Field of study<span className="text-red-500">*</span>
+							</StyledLabel>
+							<Controller
+								control={control}
+								name="field"
+								defaultValue={null}
+								rules={{ required: "Input your field!" }}
+								render={({ field: { onChange, value } }) => (
+									<Select
+										className="basic-single"
+										classNamePrefix="select"
+										defaultValue={null}
+										isClearable
+										isSearchable
+										options={courseList.map((item) => ({
+											label: item,
+											value: item,
+										}))}
+										onChange={onChange}
+										value={value}
+									/>
+								)}
+							/>
+							{errors.field && (
+								<StyledErrorMessage>{errors.field.message}</StyledErrorMessage>
 							)}
-						/>
-						{errors.field && (
-							<StyledErrorMessage>{errors.field.message}</StyledErrorMessage>
-						)}
+						</div>
 					</div>
+					<div className="flex justify-between gap-3">
+						<div className="flex flex-col space-y-1 w-1/2">
+							<StyledLabel>
+								Start year<span className="text-red-500">*</span>
+							</StyledLabel>
+							<Controller
+								control={control}
+								name="startDate"
+								rules={{ required: "Input your start year!" }}
+								render={({ field: { onChange, value } }) => (
+									<ReactDatePicker
+										selected={value}
+										onChange={onChange}
+										showMonthYearPicker
+										dateFormat="MM/yyyy"
+										value={value ? formatDate(value) : ""}
+									/>
+								)}
+							/>
+							{errors.startDate && (
+								<StyledErrorMessage>
+									{errors.startDate.message}
+								</StyledErrorMessage>
+							)}
+						</div>
 
-					<div className="flex flex-col w-full space-y-1">
-						<StyledLabel>
-							Start year<span className="text-red-500">*</span>
-						</StyledLabel>
-						<StyledInput
-							type="number"
-							placeholder="startYear"
-							$invalid={Boolean(errors?.startYear)}
-							{...register("startYear", { required: "Input your startYear!" })}
-						/>
-						{errors.startYear && (
-							<StyledErrorMessage>
-								{errors.startYear.message}
-							</StyledErrorMessage>
-						)}
+						<div className="flex flex-col space-y-1 w-1/2">
+							<StyledLabel>
+								End Date<span className="text-red-500">*</span>
+							</StyledLabel>
+							<Controller
+								control={control}
+								name="endDate"
+								rules={{
+									required: "Input your end date!",
+									validate: (value, formValues) => {
+										if (formValues.startDate < value) return true;
+										return "End date must be greater than start date";
+									},
+								}}
+								render={({ field: { onChange, value } }) => (
+									<ReactDatePicker
+										selected={value}
+										onChange={onChange}
+										showMonthYearPicker
+										dateFormat="MM/yyyy"
+										value={value ? formatDate(value) : ""}
+									/>
+								)}
+							/>
+							{errors.endDate && (
+								<StyledErrorMessage>
+									{errors.endDate.message}
+								</StyledErrorMessage>
+							)}
+						</div>
 					</div>
-
-					<div className="flex flex-col w-full space-y-1">
-						<StyledLabel>
-							End year<span className="text-red-500">*</span>
-						</StyledLabel>
-						<StyledInput
-							type="number"
-							placeholder="endYear"
-							$invalid={Boolean(errors?.endYear)}
-							{...register("endYear", { required: "Input your endYear!" })}
-						/>
-						{errors.endYear && (
-							<StyledErrorMessage>{errors.endYear.message}</StyledErrorMessage>
-						)}
-					</div>
-
 					<div className="flex flex-col w-full space-y-1">
 						<StyledLabel>Grade</StyledLabel>
 						<StyledInput
 							type="float"
-							placeholder="grade"
 							$invalid={Boolean(errors?.grade)}
 							{...register("grade")}
 						/>
@@ -257,7 +285,6 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 							<StyledErrorMessage>{errors.grade.message}</StyledErrorMessage>
 						)}
 					</div>
-
 					<div className="flex flex-col w-full space-y-1">
 						<StyledLabel>Description</StyledLabel>
 						<StyledTextArea
@@ -266,7 +293,6 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 							{...register("description")}
 						/>
 					</div>
-
 					<div className="flex justify-between items-center gap-3">
 						<StyledButton
 							type="button"

@@ -4,6 +4,7 @@ import { StyledH2 } from "../styled/Typography";
 import Markdown from "react-markdown";
 import styled from "styled-components";
 import EditIcon from "../icons/EditIcon";
+import { getMonthYearString } from "@/helpers/functions";
 
 export const EditButton = styled.button`
 	position: absolute;
@@ -44,9 +45,11 @@ const EducationCard: FC<NewEducationModalProps> = ({ data, onClickEdit }) => {
 			</StyledH2>
 			<p className="text-lg">{data.school}</p>
 			<p className="text-gray-400">
-				{data.startYear} - {data.endYear}
+				{getMonthYearString(data.startDate)} -{" "}
+				{getMonthYearString(data.endDate)}
 			</p>
-			<Markdown>{data.description}</Markdown>
+			{data?.grade && <p className="text-gray-400">Grade : {data.grade}</p>}
+			{data?.description && <Markdown>{data.description}</Markdown>}
 		</div>
 	);
 };
