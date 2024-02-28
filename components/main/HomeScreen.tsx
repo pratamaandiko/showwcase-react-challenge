@@ -1,38 +1,7 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import styled from "styled-components";
-import { StyledInput, StyledButton } from "../forms/FormComponents";
-
-const StyledHeading = styled.h1`
-	font-family: "onest", sans-serif;
-	font-size: 2rem;
-	@media (min-width: 640px) {
-		font-size: 3rem;
-	}
-	@media (min-width: 768px) {
-		font-size: 4rem;
-	}
-	font-weight: 800;
-	color: #201658;
-	text-align: center;
-	max-width: 100%;
-	@media (min-width: 768px) {
-		max-width: 650px;
-	}
-	line-height: 1;
-`;
-const StyledSubtitle = styled.h2`
-	font-family: "onest", sans-serif;
-	font-size: 16px;
-
-	@media (min-width: 768px) {
-		font-size: 24px;
-	}
-
-	text-align: center;
-	line-height: 1.5;
-	color: #201658;
-`;
+import { StyledInput, StyledButton, StyledErrorMessage } from "../styled/Form";
+import { StyledH1, StyledH2 } from "../styled/Typography";
 
 type Inputs = {
 	name: string;
@@ -53,12 +22,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSubmitName }) => {
 
 	return (
 		<main className="flex flex-col justify-center items-center space-y-4 h-screen p-4 md:p-10">
-			<StyledHeading>
-				Hi there! Welcome to your education showcase.
-			</StyledHeading>
-			<StyledSubtitle>
+			<StyledH1 fontSize={["2rem", "3rem", "5rem"]}>
+				<span className="text-blue-2">Hi there!</span> Welcome to your{" "}
+				<span className="text-blue-2">education showcase</span>.
+			</StyledH1>
+			<StyledH2 fontSize={["16px", "24px"]}>
 				Type your name and click &quot;Enter&quot; below to begin!
-			</StyledSubtitle>
+			</StyledH2>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="flex flex-col justify-center items-center w-full space-y-4"
@@ -66,13 +36,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onSubmitName }) => {
 				<div className="flex flex-col w-full">
 					<StyledInput
 						type="text"
-						invalid={Boolean(errors.name)}
-						{...register("name", { required: true })}
+						placeholder="Your name"
+						$invalid={Boolean(errors?.name)}
+						{...register("name", { required: "Input your name!" })}
 					/>
 					{errors.name && (
-						<span className="text-xs md:text-sm text-red-500">
-							This field is required
-						</span>
+						<StyledErrorMessage>{errors.name.message}</StyledErrorMessage>
 					)}
 				</div>
 

@@ -1,28 +1,32 @@
 import styled from "styled-components";
 
 interface StyledLabelProps {
-	invalid?: boolean;
-}
-
-interface StyledButtonProps {
-	enabled?: boolean;
+	$invalid?: boolean;
 }
 
 export const StyledLabel = styled.label<StyledLabelProps>`
 	display: block;
 	margin-bottom: 5px;
 	font-weight: bold;
-	color: ${(props) => (props.invalid ? "red" : "black")};
+	color: ${(props) => (props.$invalid ? "red" : "black")};
 `;
 
 export const StyledInput = styled.input<StyledLabelProps>`
 	width: 100%;
 	padding: 10px;
-	border: ${(props) => (props.invalid ? "2px solid red" : "1px solid #ccc")};
+	border: ${(props) => (props.$invalid ? "2px solid red" : "1px solid #ccc")};
 	border-radius: 5px;
 `;
 
-export const StyledButton = styled.button<StyledButtonProps>`
+export const StyledErrorMessage = styled.span`
+	font-size: 12px;
+	@media (min-width: 480px) {
+		font-size: 14px;
+	}
+	color: red;
+`;
+
+export const StyledButton = styled.button`
 	align-items: center;
 	background-clip: padding-box;
 	background-color: #201658;

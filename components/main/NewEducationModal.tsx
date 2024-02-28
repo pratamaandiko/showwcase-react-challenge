@@ -1,60 +1,75 @@
 import React, { FC } from "react";
 import ReactModal from "react-modal";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { EducationType } from "@/types/education";
-import { nanoid } from "nanoid";
 
 interface NewEducationModalProps {
 	isOpen: boolean;
 	onRequestClose: () => void;
-	onSubmitEducation: SubmitHandler<EducationType>;
 }
 
 const NewEducationModal: FC<NewEducationModalProps> = ({
 	isOpen,
 	onRequestClose,
-	onSubmitEducation,
 }) => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<EducationType>();
+	const customStyles = {
+		content: {
+			top: "50%",
+			left: "50%",
+			right: "auto",
+			bottom: "auto",
+			marginRight: "-50%",
+			transform: "translate(-50%, -50%)",
+			width: "300px", // Set width
+			height: "300px", // Set height
+			background: "#fff",
+			borderRadius: "10px",
+			padding: "20px",
+			boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+			animation: "modalFade 0.5s ease",
+			position: "relative", // Needed to position the close button absolutely within the modal
+		},
+		overlay: {
+			backgroundColor: "rgba(0, 0, 0, 0.75)",
+			transition: "opacity 0.5s ease",
+		},
+	};
 
-	const onSubmit: SubmitHandler<EducationType> = (data) => {
-		onSubmitEducation({ ...data, id: nanoid() });
-		onRequestClose();
+	// Style for the close button
+	const closeButtonStyle = {
+		position: "absolute",
+		top: "10px",
+		right: "10px",
+		background: "transparent",
+		border: "none",
+		fontSize: "16px",
+		cursor: "pointer",
 	};
 
 	return (
-		<ReactModal
-			isOpen={isOpen}
-			onRequestClose={onRequestClose}
-			contentLabel="Example Modal"
-		>
-			<button onClick={onRequestClose}>close</button>
-			<form
-				onSubmit={handleSubmit(onSubmit)}
-				className="flex flex-col justify-center items-center"
+		<>
+			<style>{`
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+`}</style>
+			<ReactModal
+				isOpen={isOpen}
+				onRequestClose={onRequestClose}
+				contentLabel="Example Modal"
+				style={customStyles}
 			>
-				<input {...register("school", { required: true })} />
-				{errors.school && <span>This field is required</span>}
-				<input {...register("degree", { required: true })} />
-				{errors.degree && <span>This field is required</span>}
-				<input {...register("field", { required: true })} />
-				{errors.field && <span>This field is required</span>}
-				<input type="number" {...register("startYear", { required: true })} />
-				{errors.startYear && <span>This field is required</span>}
-				<input type="number" {...register("endYear", { required: true })} />
-				{errors.endYear && <span>This field is required</span>}
-				<input type="float" {...register("grade", { required: true })} />
-				{errors.grade && <span>This field is required</span>}
-				<textarea {...register("description", { required: true })} />
-				{errors.description && <span>This field is required</span>}
-
-				<button type="submit">Enter</button>
-			</form>
-		</ReactModal>
+				<button onClick={onRequestClose} style={closeButtonStyle}>
+					&times;
+				</button>
+				<p>This is content</p>
+			</ReactModal>
+		</>
 	);
 };
 
