@@ -11,6 +11,7 @@ interface StyledLabelProps {
 
 interface StyledButtonProps extends TypographyProps, LayoutProps {
 	$outline?: boolean;
+	$danger?: boolean;
 }
 
 export const StyledLabel = styled.label<StyledLabelProps>`
@@ -94,7 +95,7 @@ export const StyledButton = styled.button<StyledButtonProps>`
 			border: 2px solid #201658;
 			&:hover,
 			&:focus {
-				background-color: #98abee;
+				background-color: #becefa;
 				box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
 			}
 			&:hover {
@@ -103,7 +104,30 @@ export const StyledButton = styled.button<StyledButtonProps>`
 
 			&:active {
 				color: white;
-				background-color: #1d24ca;
+				background-color: #98abee;
+				box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+				transform: translateY(0);
+			}
+		`}
+
+	${(props) =>
+		props.$danger &&
+		css`
+			background: white;
+			color: red;
+			border: 2px solid red;
+			&:hover,
+			&:focus {
+				background-color: #ffc4c8;
+				box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+			}
+			&:hover {
+				transform: translateY(-1px);
+			}
+
+			&:active {
+				color: white;
+				background-color: #ff9ea5;
 				box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
 				transform: translateY(0);
 			}

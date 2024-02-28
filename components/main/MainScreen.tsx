@@ -5,25 +5,34 @@ import { EducationType } from "@/types/education";
 import Link from "next/link";
 import { StyledButton } from "../styled/Form";
 import { StyledH1, StyledH2 } from "../styled/Typography";
+import EditEducationModal from "./EditEducationModal";
 
 interface MainScreenProps {
 	name: string;
 }
 
 const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
-	const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+	const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
+	const [isOpenEditModal, setIsOpenEditModal] = useState<EducationType | null>(
+		null
+	);
 	const [educationsData, setEducationsData] = useState<EducationType[]>([]);
 
-	function openModal() {
-		setIsOpenModal(true);
-	}
-
-	function closeModal() {
-		setIsOpenModal(false);
-	}
-
-	const submitEducationHandler = (data: EducationType) => {
+	const addEducationHandler = (data: EducationType) => {
 		setEducationsData((prevState) => [...prevState, data]);
+	};
+
+	const editEducationHandler = (data: EducationType) => {
+		setEducationsData((prevState) => {
+			return prevState.map((item) => (item.id === data.id ? data : item));
+		});
+	};
+
+	const deleteEducationHandler = (id: string) => {
+		setEducationsData((prevState) => {
+			return prevState.filter((item) => item.id !== id);
+		});
+		setIsOpenEditModal(null);
 	};
 
 	return (
@@ -33,17 +42,17 @@ const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
 					Welcome to <span className="text-blue-2">{name}&apos;s</span>{" "}
 					education page
 				</StyledH1>
-				<StyledButton type="button" onClick={openModal}>
+				<StyledButton type="button" onClick={() => setIsOpenAddModal(true)}>
 					Add new Education
 				</StyledButton>
 			</header>
 			{educationsData.length ? (
 				<div className="grid grid-cols-3 w-full gap-4">
-					<aside className="col-span-3 md:col-span-1 flex flex-col space-y-2 ">
+					<aside className="col-span-3 md:col-span-1 flex flex-col ">
 						<StyledH2
 							fontSize={["20px", "24px"]}
 							fontWeight={700}
-							className="border-b-2 border-b-gray-300 pb-4"
+							className="border-b-2 border-b-gray-300 pb-4 mb-3"
 						>
 							Bookmark
 						</StyledH2>
@@ -51,7 +60,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
 							<Link
 								key={item.id}
 								href={`#${item.id}`}
-								className="font-bold text-ellipsis"
+								className="font-bold text-ellipsis hover:underline my-2"
 							>
 								{item.school}
 							</Link>
@@ -66,7 +75,11 @@ const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
 							Educations
 						</StyledH2>
 						{educationsData.map((item) => (
-							<EducationCard key={item.id} data={item} />
+							<EducationCard
+								key={item.id}
+								data={item}
+								onClickEdit={setIsOpenEditModal}
+							/>
 						))}
 					</main>
 				</div>
@@ -80,11 +93,19 @@ const MainScreen: React.FC<MainScreenProps> = ({ name }) => {
 				</StyledH2>
 			)}
 
-			{isOpenModal && (
+			{isOpenAddModal && (
 				<NewEducationModal
-					isOpen={isOpenModal}
-					onRequestClose={closeModal}
-					onSubmitEducation={submitEducationHandler}
+					isOpen={isOpenAddModal}
+					onRequestClose={() => setIsOpenAddModal(false)}
+					onSubmitEducation={addEducationHandler}
+				/>
+			)}
+			{Boolean(isOpenEditModal) && (
+				<EditEducationModal
+					dataEdit={isOpenEditModal}
+					onRequestClose={() => setIsOpenEditModal(null)}
+					onEditeducation={editEducationHandler}
+					onDeleteEducation={deleteEducationHandler}
 				/>
 			)}
 		</div>

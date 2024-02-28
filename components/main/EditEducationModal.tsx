@@ -17,10 +17,11 @@ import { courseList, degreeOptions } from "@/constant/data";
 import { useGetUniversity } from "@/hooks/api/useGetUniversity";
 import useDebounce from "@/hooks/useDebounce";
 
-interface NewEducationModalProps {
-	isOpen: boolean;
+interface EditEducationModalProps {
+	dataEdit: EducationType | null;
 	onRequestClose: () => void;
-	onSubmitEducation: SubmitHandler<EducationType>;
+	onDeleteEducation: (id: string) => void;
+	onEditeducation: SubmitHandler<EducationType>;
 }
 export const CloseButton = styled.button`
 	position: absolute;
@@ -52,17 +53,25 @@ const customStyles: ReactModal.Styles = {
 	},
 };
 
-const NewEducationModal: FC<NewEducationModalProps> = ({
-	isOpen,
+const EditEducationModal: FC<EditEducationModalProps> = ({
+	dataEdit,
 	onRequestClose,
-	onSubmitEducation,
+	onEditeducation,
+	onDeleteEducation,
 }) => {
 	const {
 		register,
 		handleSubmit,
 		control,
 		formState: { errors },
-	} = useForm<EducationSubmitType>();
+	} = useForm<EducationSubmitType>({
+		defaultValues: {
+			...dataEdit,
+			school: { label: dataEdit!!.school, value: dataEdit!!.school },
+			degree: { label: dataEdit!!.degree, value: dataEdit!!.degree },
+			field: { label: dataEdit!!.field, value: dataEdit!!.field },
+		},
+	});
 	const [queryUniversity, setQueryUniversity] = useState("");
 	const debouncedSearchUniversity = useDebounce(queryUniversity, 750);
 	const { data: listUniversity, isFetching: isFetchingListUniversity } =
@@ -74,9 +83,9 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 		});
 
 	const onSubmit: SubmitHandler<EducationSubmitType> = (data) => {
-		onSubmitEducation({
+		onEditeducation({
 			...data,
-			id: nanoid(),
+			id: dataEdit!!.id,
 			school: data.school!!.value,
 			degree: data.degree!!.value,
 			field: data.field!!.value,
@@ -100,7 +109,7 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 				`}
 			</style>
 			<ReactModal
-				isOpen={isOpen}
+				isOpen={Boolean(dataEdit)}
 				onRequestClose={onRequestClose}
 				style={customStyles}
 				ariaHideApp={false}
@@ -108,7 +117,7 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 			>
 				<div className="flex justify-between items-start">
 					<StyledH2 fontSize={["20px"]} fontWeight={600}>
-						Add Education
+						Edit Education
 					</StyledH2>
 					<CloseButton onClick={onRequestClose}>&times;</CloseButton>
 				</div>
@@ -267,18 +276,30 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 						/>
 					</div>
 
-					<div className="flex justify-between items-center gap-3">
+					<div className="flex justify-between items-center">
 						<StyledButton
 							type="button"
-							onClick={onRequestClose}
-							$outline={true}
-							width={1 / 2}
+							onClick={() => {
+								onDeleteEducation(dataEdit!!.id);
+							}}
+							$danger={true}
 						>
-							Cancel
+							Delete
 						</StyledButton>
-						<StyledButton type="submit" width={1 / 2}>
-							Save
-						</StyledButton>
+
+						<div className="flex justify-between items-center gap-3">
+							<StyledButton
+								type="button"
+								onClick={onRequestClose}
+								$outline={true}
+								width={1 / 2}
+							>
+								Cancel
+							</StyledButton>
+							<StyledButton type="submit" width={1 / 2}>
+								Save
+							</StyledButton>
+						</div>
 					</div>
 				</form>
 			</ReactModal>
@@ -286,4 +307,4 @@ const NewEducationModal: FC<NewEducationModalProps> = ({
 	);
 };
 
-export default NewEducationModal;
+export default EditEducationModal;

@@ -11,9 +11,9 @@ export type EducationType = {
 
 export type EducationSubmitType = {
 	id: string;
-	school: { label: string; value: string };
-	degree: { label: string; value: string };
-	field: { label: string; value: string };
+	school: { label: string; value: string } | null;
+	degree: { label: string; value: string } | null;
+	field: { label: string; value: string } | null;
 	startYear: number;
 	endYear: number;
 	grade: number;
