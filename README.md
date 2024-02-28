@@ -20,3 +20,7 @@
 - react-select
 - styled-components
 - styled-system
+
+Github Project Link: https://github.com/pratamaandiko/showwcase-react-challenge
+
+Deployed Application Link: https://showwcase-react-challenge-cyan.vercel.app (but the university API won't work because it served using HTTP)
